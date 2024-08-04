@@ -3,96 +3,31 @@
 
 #if SESSIONS_MODULE
 
-#if IMG_MODULE_CHANGE_EVERY_HOUR
-RTC_DATA_ATTR int8_t imageCurrentHour = -1;
-#endif
-
-void wfImagecheckShow(bool *showBool, bool *redrawBool)
+void wfSessionsCheckShow(bool *showBool, bool *redrawBool)
 {
     *showBool = true;
-#if IMG_MODULE_CHANGE_EVERY_HOUR
-    if (timeRTC.Hour != imageCurrentHour)
-    {
-        imageCurrentHour = timeRTC.Hour;
-        *redrawBool = true;
-    }
-    else
-    {
-        *redrawBool = false;
-    }
-#else
-    *redrawBool = false;
-#endif
+    *redrawBool = true;
 }
 
-RTC_DATA_ATTR uint32_t imageNameCrc32 = 0;
-#define MAX_TRIES 3
-uint8_t tries = 0;
-
-void redrawModuleImage()
+void redrawModuleSessions()
 {
-    u8_t c = 0;
-    {
-        File root = LittleFS.open("/img/" + String(IMAGE_MODULE_PATH));
-        File file = root.openNextFile();
-        while (file)
-        {
-            if (file.isDirectory() == false)
-            {
-                c = c + 1;
-            }
-            file = root.openNextFile();
-        }
-        root.close();
-        file.close();
-    }
-    debugLog("There are so many module images: " + String(c));
-    u8_t finalImageIndex = random(1, c + 1);
-    debugLog("We want the image: " + String(finalImageIndex));
-    u8_t cFinal = 0;
-    {
-        File root = LittleFS.open("/img/" + String(IMAGE_MODULE_PATH));
-        File file = root.openNextFile();
-        while (file)
-        {
-            if (file.isDirectory() == false)
-            {
-                cFinal = cFinal + 1;
-                if (cFinal == finalImageIndex)
-                {
-                    uint32_t romCRC = (~crc32_le((uint32_t) ~(0xffffffff), (const uint8_t *)file.name(), strlen(file.name()))) ^ 0xffffffff;
-                    debugLog("Got new crc: " + String(romCRC) + " from file: " + String(file.name()));
-                    if (imageNameCrc32 == romCRC && tries < MAX_TRIES)
-                    {
-                        tries = tries + 1;
-                        root.close();
-                        file.close();
-                        redrawModuleImage();
-                        return;
-                    }
-                    imageNameCrc32 = romCRC;
-                    writeImageN(MODULE_RECT_X, MODULE_RECT_Y, getImg(IMAGE_MODULE_PATH + String(file.name())));
-                    writeTextReplaceBack("test", 16,16);
-                    dUChange = true;
-                }
-            }
-            file = root.openNextFile();
-        }
-        root.close();
-        file.close();
-    }
+    setFont(getFont("dogicapixel4"));
+    setTextSize(1);
+    display.setCursor(MODULE_RECT_X + MODULE_W - 60, MODULE_RECT_Y + 7 - 1); // font is 7 pixels
+    auto timeStr = getHourMinute(wFTime);
+    display.print("Test:" + timeStr);
 }
 
-void wfImagerequestShow(buttonState button, bool *showBool)
+void wfSessionsRequestShow(buttonState button, bool *showBool)
 {
-    redrawModuleImage();
+    redrawModuleSessions();
 }
 
 // Lambda doesn't work here
 RTC_DATA_ATTR wfModule wfSessions = {
     true,
-    wfImagecheckShow,
-    wfImagerequestShow,
+    wfSessionsCheckShow,
+    wfSessionsRequestShow,
 };
 
 #endif
