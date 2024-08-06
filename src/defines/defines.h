@@ -150,5 +150,8 @@ extern bufSize emptyBuff;
 #if IMAGE_MODULE
 #include "../ui/watchfaceModules/imgMod/imgMod.h"
 #endif
+#if SESSIONS_MODULE
+#include "../ui/watchfaceModules/sessionsMod/sessionsMod.h"
+#endif
 
 #endif

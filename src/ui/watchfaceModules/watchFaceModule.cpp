@@ -35,7 +35,7 @@ RTC_DATA_ATTR wfModule *wfModulesList[MODULE_COUNT] = {
     &wfEmpty,
 #endif
 #if SESSIONS_MODULE
-    &wfImage,
+    &wfSessions,
 #else
     &wfEmpty,
 #endif
