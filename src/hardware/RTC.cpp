@@ -295,6 +295,19 @@ void alarmManageRTC()
   }
 }
 
+String getHour(tmElements_t timeEl)
+{
+  isDebug(dumpRTCTime(timeEl));
+  String h = String(timeEl.Hour);
+  if (h.length() == 1)
+  {
+    h = "0" + h;
+  }
+
+  debugLog("Hour: " + h);
+  return h;
+}
+
 String getHourMinute(tmElements_t timeEl)
 {
   isDebug(dumpRTCTime(timeEl));

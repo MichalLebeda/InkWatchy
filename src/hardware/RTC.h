@@ -23,6 +23,7 @@ void alarmManageRTC();
 void setupMillisComparators();
 
 // Not using reference made it... really broken
+String getHour(tmElements_t timeEl);
 String getHourMinute(tmElements_t timeEl);
 String getDayName(int offset = 0);
 String getMonthName(int monthNumber);

@@ -14,6 +14,11 @@ RTC_DATA_ATTR wfModule *wfModulesList[MODULE_COUNT] = {
 #else
     &wfEmpty,
 #endif
+#if SESSIONS_MODULE
+    &wfSessions,
+#else
+    &wfEmpty,
+#endif
 #if BITCOIN_MODULE
     &wfBit,
 #else
@@ -31,11 +36,6 @@ RTC_DATA_ATTR wfModule *wfModulesList[MODULE_COUNT] = {
 #endif
 #if IMAGE_MODULE
     &wfImage,
-#else
-    &wfEmpty,
-#endif
-#if SESSIONS_MODULE
-    &wfSessions,
 #else
     &wfEmpty,
 #endif
